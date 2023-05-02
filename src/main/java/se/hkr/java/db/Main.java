@@ -5,6 +5,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import se.hkr.java.db.entities.Customer;
@@ -25,6 +26,7 @@ public class Main {
         Session session = sessionFactory.openSession();
 
         // Create a new Customer instance and save it to the database
+        Transaction tx = session.beginTransaction();
         Customer customer = new Customer();
         customer.setName("John Doe");
         customer.setAddress("123 Main St");
@@ -35,6 +37,7 @@ public class Main {
         order.setOrderDate(LocalDate.now());
         order.setCustomer(customer);
         session.persist(order);
+        tx.commit();
 
         // Test the entities using HQL (Hibernate Query Language)
         List<Customer> customers = session.createQuery("FROM Customer", Customer.class).list();
